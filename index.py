@@ -110,7 +110,9 @@ def getPhone():
 
     return json.dumps({"msg":False})
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)  # run our Flask app
+
+
+if __name__ == "__main__":
+        app.run()
 
 
