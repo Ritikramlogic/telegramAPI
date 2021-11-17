@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <!-- Telegram Section  -->
+    <div>
+      <h1>Telegram</h1>
+      <a
+        rel="noopener"
+        style="
+          padding: 8px 10px;
+          color: black;
+          text-decoration: none;
+          background-color: lightblue;
+          border-radius: 10px;
+          cursor: pointer;
+          display: none;
+        "
+        target="_blank"
+        id="JoinBTN"
+        href="https://t.me/RamLogicsTesting"
+        >Join Telegram</a
+      >
+
+      <div style="margin-top: 1rem" id="phoneContainer">
+        <input
+          placeholder="Enter Phone Number"
+          id="phoneNumber"
+          type="number"
+        />
+        <button id="phoneVerify">Verify</button>
+      </div>
+      <p id="accountExist" style="display: none">
+        Sorry you have already account
+      </p>
+
+      <form style="display: none; margin-top: 1rem" id="formPart">
+        <input placeholder="Enter Username" id="FTusername" />
+        <input
+          placeholder="Enter Phone Number"
+          id="FphoneNumber"
+          type="number"
+        />
+        <button type="submit">Validate</button>
+      </form>
+    </div>
+    <!-- Telegram API Implemention -->
+
+    <script>
+      document
+        .getElementById("formPart")
+        .addEventListener("submit", validateUser);
+      document
+        .getElementById("phoneVerify")
+        .addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          if (await validatePhone()) {
+            console.log("Sorry you have already account");
+            document.getElementById("JoinBTN").style.display = "none";
+            document.getElementById("accountExist").style.display = "block";
+          } else {
+            document.getElementById("accountExist").style.display = "none";
+            document.getElementById("phoneContainer").style.display = "none";
+            document.getElementById("JoinBTN").style.display = "inline-block";
+            document.getElementById("formPart").style.display = "inline-block";
+          }
+        });
+
+      async function validatePhone() {
+        let data = await fetch("http://localhost:5000/user/phone/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            Phone: document.getElementById("phoneNumber").value,
+          }),
+        });
+
+        data = await data.json();
+        return data.msg;
+      }
+
+      async function validateUser(e) {
+        e.preventDefault();
+        let data = await fetch("http://localhost:5000/users/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            Phone: document.getElementById("FphoneNumber").value,
+            TUserName: document.getElementById("FTusername").value,
+          }),
+        });
+
+        data = await data.json();
+        console.log(data.msg);
+      }
+    </script>
+  </body>
+</html>
